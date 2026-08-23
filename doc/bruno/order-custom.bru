@@ -1,0 +1,15 @@
+meta {
+  name: Retrieval + Generation - custom order
+  type: http
+}
+
+post {
+  url: http://localhost:8080/demo/orders
+}
+
+body:json {
+  "orderId": "33333333-3333-3333-3333-333333333333",
+  "customerId": "11111111-1111-1111-1111-111111111111",
+  "orderName": "Vatican Museums & Sistine Chapel Tour",
+  "orderLocation": "Rome, Italy"
+}

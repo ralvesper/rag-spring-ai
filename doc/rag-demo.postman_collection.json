@@ -1,0 +1,130 @@
+{
+  "info": {
+    "name": "RAG Demo - Tour Recommendation Agent",
+    "description": "Demo endpoints for the RAG (Retrieval-Augmented Generation) flow with Spring AI + Gemini + pgvector. Run order: index the catalog first, then trigger an order. All ids follow the UUID pattern.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "host",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Indexing - index sample catalog",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{host}}/demo/index-catalog",
+          "host": ["{{host}}"],
+          "path": ["demo", "index-catalog"]
+        },
+        "description": "INDEXING. Simulates 'product created/updated' events from the Products service and indexes the whole sample tour catalog (21 tours across Rome, Paris and London) into the vector store."
+      }
+    },
+    {
+      "name": "2. Indexing - index a single product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"00000000-0000-0000-0000-000000000022\",\n  \"name\": \"Sainte-Chapelle & Conciergerie Guided Visit\",\n  \"description\": \"Admire the stunning medieval stained-glass windows of Sainte-Chapelle and the historic Conciergerie.\",\n  \"location\": \"Paris, France\",\n  \"category\": \"History & Culture\",\n  \"price\": 44.0,\n  \"currency\": \"EUR\",\n  \"tags\": [\"history\", \"art\", \"guided\"]\n}"
+        },
+        "url": {
+          "raw": "{{host}}/demo/products",
+          "host": ["{{host}}"],
+          "path": ["demo", "products"]
+        },
+        "description": "INDEXING. Simulates one 'product created' event from the Products service."
+      }
+    },
+    {
+      "name": "3. Retrieval + Generation - sample order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{host}}/demo/orders/sample",
+          "host": ["{{host}}"],
+          "path": ["demo", "orders", "sample"]
+        },
+        "description": "RETRIEVAL + GENERATION. Simulates the fixed 'order created' event (Colosseum tour in Rome) and returns the RAG recommendation."
+      }
+    },
+    {
+      "name": "4. Retrieval + Generation - custom order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"33333333-3333-3333-3333-333333333333\",\n  \"customerId\": \"11111111-1111-1111-1111-111111111111\",\n  \"orderName\": \"Vatican Museums & Sistine Chapel Tour\",\n  \"orderLocation\": \"Rome, Italy\"\n}"
+        },
+        "url": {
+          "raw": "{{host}}/demo/orders",
+          "host": ["{{host}}"],
+          "path": ["demo", "orders"]
+        },
+        "description": "RETRIEVAL + GENERATION. Custom order. orderName drives the inferred interest and orderLocation constrains recommendations to the same city/region. Reuse the same customerId across orders to demonstrate the purchase-history effect."
+      }
+    },
+    {
+      "name": "5. Retrieval + Generation - second order, same customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"44444444-4444-4444-4444-444444444444\",\n  \"customerId\": \"11111111-1111-1111-1111-111111111111\",\n  \"orderName\": \"Trastevere Food Tour by Night\",\n  \"orderLocation\": \"Rome, Italy\"\n}"
+        },
+        "url": {
+          "raw": "{{host}}/demo/orders",
+          "host": ["{{host}}"],
+          "path": ["demo", "orders"]
+        },
+        "description": "RETRIEVAL + GENERATION. After steps 3/4, this order's retrieval already sees the customer's history, so the agent avoids recommending previously purchased tours while staying within the same region (Rome)."
+      }
+    },
+    {
+      "name": "6. Retrieval + Generation - order in London",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"55555555-5555-5555-5555-555555555555\",\n  \"customerId\": \"22222222-2222-2222-2222-222222222222\",\n  \"orderName\": \"Tower of London & Crown Jewels Tour\",\n  \"orderLocation\": \"London, United Kingdom\"\n}"
+        },
+        "url": {
+          "raw": "{{host}}/demo/orders",
+          "host": ["{{host}}"],
+          "path": ["demo", "orders"]
+        },
+        "description": "RETRIEVAL + GENERATION. A different customer buying a history tour in London. Demonstrates that the location constraint keeps the recommendations within the same city."
+      }
+    }
+  ]
+}

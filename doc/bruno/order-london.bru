@@ -1,0 +1,15 @@
+meta {
+  name: Retrieval + Generation - order in London
+  type: http
+}
+
+post {
+  url: http://localhost:8080/demo/orders
+}
+
+body:json {
+  "orderId": "55555555-5555-5555-5555-555555555555",
+  "customerId": "22222222-2222-2222-2222-222222222222",
+  "orderName": "Tower of London & Crown Jewels Tour",
+  "orderLocation": "London, United Kingdom"
+}

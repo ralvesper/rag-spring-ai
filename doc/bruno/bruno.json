@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "RAG Demo - Tour Recommendation Agent",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

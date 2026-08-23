@@ -1,0 +1,15 @@
+meta {
+  name: Retrieval + Generation - second order same customer
+  type: http
+}
+
+post {
+  url: http://localhost:8080/demo/orders
+}
+
+body:json {
+  "orderId": "44444444-4444-4444-4444-444444444444",
+  "customerId": "11111111-1111-1111-1111-111111111111",
+  "orderName": "Trastevere Food Tour by Night",
+  "orderLocation": "Rome, Italy"
+}

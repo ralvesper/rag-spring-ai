@@ -1,0 +1,19 @@
+meta {
+  name: Indexing - index a single product
+  type: http
+}
+
+post {
+  url: http://localhost:8080/demo/products
+}
+
+body:json {
+  "productId": "00000000-0000-0000-0000-000000000022",
+  "name": "Sainte-Chapelle & Conciergerie Guided Visit",
+  "description": "Admire the stunning medieval stained-glass windows of Sainte-Chapelle and the historic Conciergerie.",
+  "location": "Paris, France",
+  "category": "History & Culture",
+  "price": 44.0,
+  "currency": "EUR",
+  "tags": ["history", "art", "guided"]
+}

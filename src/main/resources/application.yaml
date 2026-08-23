@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: rag
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: gemini-2.5-flash-lite
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          text:
+            options:
+              model: gemini-embedding-001
+              dimensions: 1536
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 1536
